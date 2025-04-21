@@ -61,7 +61,7 @@ namespace CyberAwarenessChatbot_Part1
         public void Start()
         {
             AskForUserName();
-            ChooseInputMethod();
+            StartTextChat();
         }
         
         //Asks the user to input their name and then greets them
@@ -85,30 +85,6 @@ namespace CyberAwarenessChatbot_Part1
                 Console.WriteLine($"\nWelcome, {userName}! Let's talk aboout cybersecurity.\n");
                 synth.SpeakAsync($"\nWelcome, {userName}! Let's talk aboout cybersecurity.\n");
             }
-        }
-
-        //Ask user if they want to type or speak
-        private void ChooseInputMethod()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Choose input method");
-            Console.WriteLine("1. Type");
-            Console.WriteLine("2. Speak");
-
-           
-            string choice = Console.ReadLine();
-
-            //Start voice recognition if choice is 2
-            if(choice == "2")
-            {
-                VoiceAssist.StartRecognition(userName);
-            }
-            else
-            {
-                //Default to text chat
-                StartTextChat();
-            }
-
         }
 
         //Handles the text based chat loop
