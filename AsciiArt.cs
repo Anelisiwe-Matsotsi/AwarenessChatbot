@@ -8,6 +8,7 @@ namespace CyberAwarenessChatbot_Part1
 {
     public static class AsciiArt
     {
+        //Displays a banner for the chatbot
         public static void Display()
         {
             Console.ForegroundColor = ConsoleColor.Blue;

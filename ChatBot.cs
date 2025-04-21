@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Text;
@@ -9,9 +10,13 @@ namespace CyberAwarenessChatbot_Part1
 {
     public class ChatBot
     {
+        //variable that stores the user's name
         private string userName;
+
+        //SpeechSynthesizer allows the chatbot to speak
         private SpeechSynthesizer synth;
 
+        //array of keywords the bot will recognize when asked
         private string[] cyberQuestions =
         {
             "how are you",
@@ -27,8 +32,10 @@ namespace CyberAwarenessChatbot_Part1
             "two factor",
             "update software"
         };
+
+        //array of responses that matches to each keyword in the questions array
         private string[] responses =
-{
+        {
             "I'm great and ready to help you stay safe online!",
             "I'm your assistant to teach you about cybersecurity best practices.",
             "wYou ca ask me about phishing, passwords, malware, firewalls, and more!",
@@ -42,17 +49,22 @@ namespace CyberAwarenessChatbot_Part1
             "Two-factor authentication adds a second layer of security to your logins.",
             "Keep your software updated to patch security vulnerabilities."
         };
+
+        //Sets up the speech synthesizer with a voice
         public ChatBot()
         {
             synth = new SpeechSynthesizer();
             synth.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult);
         }
+
+        //Starts the interaction with user to ask for user
         public void Start()
         {
             AskForUserName();
             ChooseInputMethod();
         }
         
+        //Asks the user to input their name and then greets them
         private void AskForUserName()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -61,18 +73,21 @@ namespace CyberAwarenessChatbot_Part1
 
             if(string.IsNullOrEmpty(userName))
             {
+                //Show error in red and repeat if the name is empty
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Name cannot be empty. Please enter your name.\n");
                 AskForUserName();
             }
             else
             {
+                //Greet user with both text and speech
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine($"\nWelcome, {userName}! Let's talk aboout cybersecurity.\n");
                 synth.SpeakAsync($"\nWelcome, {userName}! Let's talk aboout cybersecurity.\n");
             }
         }
 
+        //Ask user if they want to type or speak
         private void ChooseInputMethod()
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -80,17 +95,23 @@ namespace CyberAwarenessChatbot_Part1
             Console.WriteLine("1. Type");
             Console.WriteLine("2. Speak");
 
+           
             string choice = Console.ReadLine();
+
+            //Start voice recognition if choice is 2
             if(choice == "2")
             {
                 VoiceAssist.StartRecognition(userName);
             }
             else
             {
+                //Default to text chat
                 StartTextChat();
             }
 
         }
+
+        //Handles the text based chat loop
         public void StartTextChat()
         {
             while(true)
@@ -107,29 +128,33 @@ namespace CyberAwarenessChatbot_Part1
                 }
                 if(input == "exit")
                 {
+                    //Exit the loop if the user types the word "exit"
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine("Goodbye! Stay cyber safe, and make good choices.");
                     synth.SpeakAsync("Goodbye! Stay cyber safe, and make good choices.");
                     break;
                 }
+                //Check and respond to the user's questions
                 RespondToQuestions(input);
             }
         }
+
+        //Matches user input to a question and gives a response
         public void RespondToQuestions( string input)
         {
             for(int i = 0; i < cyberQuestions.Length; i++)
             {
                 if (input.Contains(cyberQuestions[i]))
                 {
+                    //Responds with matching message
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine(responses[i]);
                     synth.SpeakAsync(responses[i]);
-
-
                     return;
                 }
             }
 
+            //Default response if no match is found
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Ummm, I didn't catch that. Please rephrase?");
             synth.SpeakAsync("Ummm, I didn't catch that. Please rephrase?");
