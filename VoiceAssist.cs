@@ -11,6 +11,13 @@ namespace CyberAwarenessChatbot_Part1
 {
     public static class VoiceAssist
     {
+        public static SpeechSynthesizer synth = new SpeechSynthesizer();
+
+        static VoiceAssist()
+        {
+            //Set the voice to the default system voice
+            synth.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult);
+        }
         public static void PlayVoiceGreeting()
         {
             SoundPlayer player = new SoundPlayer("C:\\Users\\ST10328767\\source\\repos\\CyberAwarenessChatbot_Part1\\CyberAwarenessChatbot_Part1\\Resources\\Cybersecurity Bot welcome.wav");
@@ -19,27 +26,26 @@ namespace CyberAwarenessChatbot_Part1
         }
         public static void StartRecognition(string userName)
         {
-            Console.WriteLine("\n[Voice Mode] Speak now...", ConsoleColor.Cyan);
-            using(SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine())
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\n[Voice Mode] Speak now...");
+
+            using (SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine())
             {
                 recognizer.LoadGrammar(new DictationGrammar());
                 recognizer.SetInputToDefaultAudioDevice();
 
                 recognizer.SpeechRecognized += (s, e) =>
                 {
-                    string input = e.Result.Text;
-                    Console.WriteLine($"You said: {input}", ConsoleColor.DarkBlue);
-                    ChatBot.RespondToQuestions(input.ToLower(), userName);
+                    string input = e.Result.Text.ToLower();
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                    Console.WriteLine($"You said: {input}");
+                    ChatBot chatbot = new ChatBot();
+                    chatbot.RespondToQuestions(input);
                 };
-                recognizer.RecognizeCompleted += (s, e) =>
-                {
-                    Console.WriteLine("Recognition ended.\n", ConsoleColor.DarkGray);
-                };
-                recognizer.RecognizeAsync(RecognizeMode.Single);
-                Console.WriteLine("Press Enter to stop listening...", ConsoleColor.DarkGray);
+
+                recognizer.RecognizeAsync(RecognizeMode.Multiple);
                 Console.ReadLine();
                 recognizer.RecognizeAsyncStop();
-
             }
         }
     }
