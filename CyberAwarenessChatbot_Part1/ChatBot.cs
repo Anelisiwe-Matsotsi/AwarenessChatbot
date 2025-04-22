@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CyberAwarenessChatbot_Part1
 {
+    /*Troelsen and Japikse, 2021*/
     public class ChatBot
     {
         //variable that stores the user's name
@@ -137,4 +138,6 @@ namespace CyberAwarenessChatbot_Part1
         }
     }
 }
- 
+/*Reference List:
+Troelsen,A. and Japikse, P. 2021.Pro C# 9 with .NET 5:Foundational Principles and Practices in Programming. 10th ed.Apress.
+*/
