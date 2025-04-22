@@ -11,6 +11,7 @@ Welcome to the Cybersecurity awareness chatbot. This project is the first part o
 
 
 ## ✅CI workflow
-
+CI workflow was successful.
+![Image](https://github.com/user-attachments/assets/7ecc7e8b-7768-4668-aa00-0697beece937)
 
 ## 🔗YouTube link
