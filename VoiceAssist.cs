@@ -29,40 +29,5 @@ namespace CyberAwarenessChatbot_Part1
             player.PlaySync(); //is there to make sure the audio finishes before continuing
 
         }
-
-        //Starts the voice recognition input from the user
-        public static void StartRecognition(string userName)
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\n[Voice Mode] Speak now...");
-
-            using (SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine())
-            {
-                //Loads the default grammar
-                recognizer.LoadGrammar(new DictationGrammar());
-
-                //Sets the microphone as the audio input
-                recognizer.SetInputToDefaultAudioDevice();
-
-                //when speech is recognized ooutput and respond
-                recognizer.SpeechRecognized += (s, e) =>
-                {
-                    string input = e.Result.Text.ToLower();
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                    Console.WriteLine($"You said: {input}");
-                    
-                    //use a new instance of the bot to respond
-                    ChatBot chatbot = new ChatBot();
-                    chatbot.RespondToQuestions(input);
-                };
-
-                //Begin listening
-                recognizer.RecognizeAsync(RecognizeMode.Multiple);
-                
-                //keeps listening until Enter is pressed
-                Console.ReadLine();
-                recognizer.RecognizeAsyncStop();
-            }
-        }
     }
 }

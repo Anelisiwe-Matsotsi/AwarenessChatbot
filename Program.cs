@@ -12,7 +12,6 @@
 
             //Create an instance of the ChatBot claas in order to access information and display it
             ChatBot chatbot = new ChatBot();
-            
             chatbot.Start();     
         }
     }
