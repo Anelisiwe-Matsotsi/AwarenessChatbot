@@ -3,12 +3,6 @@
 Welcome to the **Cybersecurity awareness chatbot**, a simple C# chatbot designed to teach users about cybersecurity best practices. This project is part of a programming assignment (Part 1) it showcases OOP, speech synthesis, ASCII art, and user interaction.
 
 ---
-## 🔗 GitHub link
-Click the following link to view the GitHub repo:
-
-https://github.com/VCNMB/vcnmb-prog6221-2025-poe-Anelisiwe-Matsotsi.git
-
----
 
 ## 📩 Instructions on how to "download" project
 - Go to the GitHub repository.
