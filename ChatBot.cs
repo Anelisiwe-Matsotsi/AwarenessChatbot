@@ -11,131 +11,86 @@ namespace CyberAwarenessChatbot_Part1
     /*Troelsen and Japikse, 2021*/
     public class ChatBot
     {
-        //variable that stores the user's name
         private string userName;
-
-        //SpeechSynthesizer allows the chatbot to speak
-        private SpeechSynthesizer synth;
-
-        //array of keywords the bot will recognize when asked
-        private string[] cyberQuestions =
-        {
-            "how are you",
-            "purpose",
-            "what can I ask",
-            "phishing",
-            "password",
-            "safely browse",
-            "malware",
-            "antivirus",
-            "firewall",
-            "vpn",
-            "two factor",
-            "update software"
-        };
-
-        //array of responses that matches to each keyword in the questions array
-        private string[] responses =
-        {
-            "I'm great and ready to help you stay safe online!",
-            "I'm your assistant to teach you about cybersecurity best practices.",
-            "You can ask me about phishing, passwords, malware, firewalls, and more!",
-            "Phishing tricks you into revealing personal info via fake emails or websites.", /*Proofpoint, 2024*/
-            "Use strong , unique passwords. Avoid reusing them across multiple sites.",/*Jetpack, 2025*/
-            "Avoid clicking unknown links. Always check for HTTPS in the URL.",/*NordPass, 2025*/
-            "Malware is malicious software that can harm your computer or steal data.",/*TechTarget, 2025a*/
-            "Antivirus software helps detect and remove malicious software from your system.",/*Computer Technicians, 2022*/
-            "A firewall blocks unauthorised access to your computer network.",/*Fortinet, 2025*/
-            "A VPN secures your internet connection and hides your IP address.",/*Kaspersky, 2025*/
-            "Two-factor authentication adds a second layer of security to your logins.",/*TechTarget, 2025b*/
-            "Keep your software updated to patch security vulnerabilities."/*TechTarget, 2025c*/
-        };
-
-        //Sets up the speech synthesizer with a voice
-        public ChatBot()
-        {
-            synth = new SpeechSynthesizer();
-            synth.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult);
-        }
-
-        //Starts the interaction with user to ask for user
         public void Start()
         {
             AskForUserName();
             StartTextChat();
         }
-        
-        //Asks the user to input their name and then greets them
         private void AskForUserName()
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("What is your name? ");
+            Console.WriteLine("What is your name?", ConsoleColor.Green);
             userName = Console.ReadLine();
 
-            if(string.IsNullOrEmpty(userName))
+            if (userName == null || userName == "")
             {
-                //Show error in red and repeat if the name is empty
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Name cannot be empty. Please enter your name.\n");
+                Console.WriteLine("Name cannot be empty. Please insert name.\n");
                 AskForUserName();
+            }
+            Console.WriteLine($"\nWelcome, {userName}! Let's talk cybersecurity.\n");
+        }
+
+
+        private void StartTextChat()
+        {
+            while (true)
+            {
+                Console.WriteLine("Ask me something (type 'exit' to quit): ", ConsoleColor.DarkYellow);
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine("Please enter a valid question.", ConsoleColor.Red);
+                    continue;
+                }
+
+                if (input == "exit")
+                {
+                    Console.WriteLine("Goodbye! Stay cyber safe, and make good choices.", ConsoleColor.Magenta);
+                    break;
+                }
+                RespondToQuestions(input, userName);
+            }
+        }
+        public static void RespondToQuestions(string input, string userName)
+        {
+            if (input.Contains("How are you?"))
+            {
+                Console.WriteLine("I'm great and ready to help you stay safe online!", ConsoleColor.Green);
+            }
+            else if (input.Contains("Purpose"))
+            {
+                Console.WriteLine("I'm your assistant to teach you about cybersecurity best practices.", ConsoleColor.Green);
+            }
+            else if (input.Contains("What can I ask?"))
+            {
+                Console.WriteLine("You can ask me about phising, password safety, or how to safely browse the internet.", ConsoleColor.Green);
+            }
+            else if (input.Contains("phising"))
+            {
+                Console.WriteLine("Phising tricks you into revealing personal information via fake emails or websites.", ConsoleColor.Green);
+            }
+            else if (input.Contains("password"))
+            {
+                Console.WriteLine("Use strong, unique passwords. Avoid using the same password on multiple places.", ConsoleColor.Green);
+
+            }
+            else if (input.Contains("password"))
+            {
+                Console.WriteLine("A password shouldn’t be the word “password” or the same letter or number repeated", ConsoleColor.Green);
+
+            }
+
+            else if (input.Contains("safely browse "))
+            {
+                Console.WriteLine("Avoid clicking unknown links and make sure the website uses HTTPS for security.", ConsoleColor.Green);
             }
             else
             {
-                //Greet user with both text and speech
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"\nWelcome, {userName}! Let's talk about cybersecurity.\n");
-                synth.SpeakAsync($"\nWelcome, {userName}! Let's talk about cybersecurity.\n");
+                Console.WriteLine("Ummm, I didn't catch that. Please rephrase?", ConsoleColor.Red);
             }
         }
 
-        //Handles the text based chat loop
-        public void StartTextChat()
-        {
-            while(true)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkCyan;
-                Console.WriteLine("Ask me something about cybersecurity (type 'exit' to quit): ");
-                string input = Console.ReadLine();
-
-                if(string.IsNullOrEmpty(input))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please enter a valid question");
-                    continue;
-                }
-                if(input == "exit")
-                {
-                    //Exit the loop if the user types the word "exit"
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.WriteLine("Goodbye! Stay cyber safe, and make good choices.");
-                    synth.SpeakAsync("Goodbye! Stay cyber safe, and make good choices.");
-                    break;
-                }
-                //Check and respond to the user's questions
-                RespondToQuestions(input);
-            }
-        }
-
-        //Matches user input to a question and gives a response
-        public void RespondToQuestions( string input)
-        {
-            for(int i = 0; i < cyberQuestions.Length; i++)
-            {
-                if (input.Contains(cyberQuestions[i]))
-                {
-                    //Responds with matching message
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine(responses[i]);
-                    synth.SpeakAsync(responses[i]);
-                    return;
-                }
-            }
-
-            //Default response if no match is found
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Ummm, I didn't catch that. Please rephrase?");
-            synth.SpeakAsync("Ummm, I didn't catch that. Please rephrase?");
-        }
     }
 }
 /*Reference List:
