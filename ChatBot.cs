@@ -12,12 +12,13 @@ namespace CyberAwarenessChatbot_Part1
     public class ChatBot
     {
         private string userName;
-        private string lastTopic = "";
+        private string lastTopic;
+        private string favouriteTopic;
         private Dictionary<string, List<string>> keywordResponses; /*Stackoverflow,*/
-        private SpeechSynthesizer synthesizer;
+        private Random random = new Random();
         public ChatBot()
         {
-            synthesizer = new SpeechSynthesizer();
+            
             keywordResponses = new Dictionary<string, List<string>>
             {
                {"password", new List<string>
@@ -55,23 +56,47 @@ namespace CyberAwarenessChatbot_Part1
         }
         public void Start() 
         {
+            
             AskForUserName();
+            AskForFavouriteTopic();
             StartTextChat();
         }
 
         private void AskForUserName()
         {
             Console.WriteLine("What is your name?", ConsoleColor.Green);
+            VoiceAssist.synth.Speak("What is your name?");
             userName = Console.ReadLine();
 
            if (string.IsNullOrEmpty(userName))
             {
                Console.WriteLine("Name cannot be empty. Please insert name.\n");
+                VoiceAssist.synth.Speak("Name cannot be empty. Please insert name");
                AskForUserName();
                return;
             }
             Console.WriteLine($"\nWelcome, {userName}! Let's talk cybersecurity.\n");
-            synthesizer.Speak($"Welcome, {userName}! Let's talk cybersecurity");
+            VoiceAssist.synth.Speak($"Welcome, {userName}! Let's talk cybersecurity");
+        }
+
+        private void AskForFavouriteTopic()
+        {
+            Console.WriteLine("What is your favourite cybersecurity topic? (e.g., password, scam, privacy, phishing");
+            VoiceAssist.synth.Speak("What is your favourite cybersecurity topic? For example, password, scam, privacy or phishing.");
+            favouriteTopic = Console.ReadLine();
+
+            if (!string.IsNullOrEmpty(favouriteTopic) && keywordResponses.ContainsKey(favouriteTopic))
+            {
+                Console.WriteLine($"Great! I'll remember that you're interested in {favouriteTopic}.");
+                VoiceAssist.synth.Speak($"Great! I'll remember that you're interested in {favouriteTopic}.");
+            }
+            else
+            {
+                favouriteTopic = null;
+                Console.WriteLine("No problem! You can ask me any cybersecurity topic.");
+                VoiceAssist.synth.Speak("No problem! You can ask me any cybersecurity topic");
+            }
+
         }
 
 
@@ -80,30 +105,33 @@ namespace CyberAwarenessChatbot_Part1
             while (true)
           {
              Console.WriteLine("Ask me something (type 'exit' to quit): ", ConsoleColor.DarkYellow);
+             VoiceAssist.synth.Speak("Ask me something or type 'exit' to quit: ");
              string input = Console.ReadLine();
 
              if (string.IsNullOrEmpty(input))
              {
                  Console.WriteLine("Please enter something meaningful.", ConsoleColor.Red);
+                 VoiceAssist.synth.Speak("Please enter something meaningful.");
                  continue;
              }
 
-            if (input == "exit")
+            if (input.ToLower() == "exit")
             {
                Console.WriteLine($"Goodbye! {userName}! Stay cyber safe and aware!", ConsoleColor.Magenta);
-                    synthesizer.Speak($"Goodbye! {userName}! Stay cyber safe and aware!");
+                    VoiceAssist.synth.Speak($"Goodbye! {userName}! Stay cyber safe and aware!");
                break;
             }
+
             RespondToQuestions(input);
 
           }
         }
-        public static void RespondToQuestions(string input, string userName)
-        //{
-        //    if (input.Contains("How are you?"))
-        //    {
-        //        Console.WriteLine("I'm great and ready to help you stay safe online!", ConsoleColor.Green);
-        //    }
+        public static void RespondToQuestions(string input)
+        {
+          if (input.Contains("How are you?"))
+          {
+              Console.WriteLine("I'm great and ready to help you stay safe online!", ConsoleColor.Green);
+          }
         //    else if (input.Contains("Purpose"))
         //    {
         //        Console.WriteLine("I'm your assistant to teach you about cybersecurity best practices.", ConsoleColor.Green);
@@ -133,7 +161,7 @@ namespace CyberAwarenessChatbot_Part1
         //    {
         //        Console.WriteLine("Ummm, I didn't catch that. Please rephrase?", ConsoleColor.Red);
         //    }
-        //}
+       }
 
     }
 }
