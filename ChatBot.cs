@@ -66,23 +66,21 @@ namespace CyberAwarenessChatbot_Part1
             {
                 Console.WriteLine("You can ask me about phising, password safety, or how to safely browse the internet.", ConsoleColor.Green);
             }
-            else if (input.Contains("phising"))
+            else if (input.Contains("phishing"))
             {
-                Console.WriteLine("Phising tricks you into revealing personal information via fake emails or websites.", ConsoleColor.Green);
+                /*Proofpoint, 2024*/
+                Console.WriteLine("Phishing tricks you into revealing personal information via fake emails or websites.", ConsoleColor.Green);
             }
             else if (input.Contains("password"))
             {
+                /*Jetpack, 2025*/
                 Console.WriteLine("Use strong, unique passwords. Avoid using the same password on multiple places.", ConsoleColor.Green);
 
             }
-            else if (input.Contains("password"))
-            {
-                Console.WriteLine("A password shouldn’t be the word “password” or the same letter or number repeated", ConsoleColor.Green);
 
-            }
-
-            else if (input.Contains("safely browse "))
+            else if (input.Contains("safely browse"))
             {
+                /*TechTarget, 2025*/
                 Console.WriteLine("Avoid clicking unknown links and make sure the website uses HTTPS for security.", ConsoleColor.Green);
             }
             else
@@ -94,14 +92,8 @@ namespace CyberAwarenessChatbot_Part1
     }
 }
 /*Reference List:
-Computer Technicians.2022.Advantages and Disadvantages of Antivirus Software.[online].Available at:<https://computertechnicians.au/advantages-and-disadvantages-of-antivirus-software/>.[Accessed 18 April 2025].
-Fortinet.2025.What Does A Firewall Do?[online].Available at:<https://www.fortinet.com/resources/cyberglossary/what-does-a-firewall-do#:~:text=Firewall%20FAQs&text=Basically%2C%20a%20firewall%20is%20a,to%20a%20more%20secure%20environment.>.[Accessed 18 April 2025].
 Jetpack. 2025.Password Reuse: A Major Vulnerability You Need to Avoid.[online].Available at:<https://jetpack.com/resources/password-reuse/>.[Accessed 18 April 2025].
-Kaspersky. 2025.What is VPN? How It Works, Types of VPN.[online].Available at:<https://www.kaspersky.com/resource-center/definitions/what-is-a-vpn>.[Accessed 18 April 2025].
-NordPass. 2025.How to check if a link is safe?[online].Available at:<https://nordpass.com/blog/how-to-check-if-a-link-is-safe/>.[Accessed 18 April 2025].
 Proofpoint.2024.What Is Phishing?[online].Available at:<https://www.proofpoint.com/us/threat-reference/phishing>.[Accessed 18 April 2025].
-TechTarget.2025a.What is malware? Prevention, detection and how attacks work.[online].Available at:<https://www.techtarget.com/searchsecurity/definition/malware>.[Accessed 18 April 2025].
-TechTarget.2025b.What is two-factor authentication (2FA)?[online].Available at:<https://www.techtarget.com/searchsecurity/definition/two-factor-authentication>.[Accessed 18 April 2025].
 TechTarget.2025c.5 reasons software updates are important.[online].Available at:<https://www.techtarget.com/whatis/feature/5-reasons-software-updates-are-important>.[Accessed 18 April 2025].
 Troelsen,A. and Japikse, P. 2021.Pro C# 9 with .NET 5:Foundational Principles and Practices in Programming. 10th ed.Apress.
 */
