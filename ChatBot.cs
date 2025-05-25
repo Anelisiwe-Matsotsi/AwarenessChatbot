@@ -17,6 +17,7 @@ namespace CyberAwarenessChatbot_Part1
         private bool favouriteTipGiven = false;
         private Dictionary<string, List<string>> keywordResponses; /*Stackoverflow,*/
         private Random random = new Random();
+        private Dictionary<string, int> lastResponseIndex = new Dictionary<string, int>();
 
         //Delegate for handling responses
         private delegate void ResponseHandler(string topic);/*Troelsen and Japikse, 2021*/
@@ -94,14 +95,14 @@ namespace CyberAwarenessChatbot_Part1
             VoiceAssist.synth.Speak("What is your favourite cybersecurity topic? For example, password, scam, privacy or phishing.");
             favouriteTopic = Console.ReadLine()?.ToLower();
 
-            if (!string.IsNullOrEmpty(favouriteTopic) && keywordResponses.ContainsKey(favouriteTopic))
+            if (!string.IsNullOrEmpty(favouriteTopic) && keywordResponses.ContainsKey(favouriteTopic))/*Stackoverflow, 2017*/
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"Great! I'll remember that you're interested in {favouriteTopic}.");
                 VoiceAssist.synth.Speak($"Great! I'll remember that you're interested in {favouriteTopic}.");
             }
             else
-            {
+            { 
                 favouriteTopic = null;
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("No problem! You can ask me any cybersecurity topic.");
@@ -209,10 +210,7 @@ namespace CyberAwarenessChatbot_Part1
             //If user asks for more information on the last topic
             if (!string.IsNullOrEmpty(lastTopic) && inputLower.Contains("more"))
             {
-                var responses = keywordResponses[lastTopic];
-                string response = responses[random.Next(responses.Count)];
-                Console.WriteLine(response);
-                VoiceAssist.synth.Speak(response);
+                RespondWithTopic(lastTopic);
                 return;
             }
 
@@ -250,12 +248,30 @@ namespace CyberAwarenessChatbot_Part1
         private void RespondWithTopic(string topic)
         { 
             var responses = keywordResponses[topic];
-            string response = responses[random.Next(responses.Count)];
+            int index = random.Next(responses.Count);
+
+            //To prevent repeat for this topic
+            if(lastResponseIndex.ContainsKey(topic) && responses.Count > 1) /*Stackoverflow, 2017*/
+            {
+                int lastIndex = lastResponseIndex[topic];
+                if(index == lastIndex)
+                {
+                    //Pick the next index
+                    index = index + 1;
+                    if(index >= responses.Count)
+                    {
+                        index = 0;
+                    }
+                }
+            }
+            lastResponseIndex[topic] = index;
+            string response = responses[index];
             Console.WriteLine(response);
             VoiceAssist.synth.Speak(response);
         }
     }
 }
 /*Reference List:
-Troelsen,A. and Japikse, P. 2021.Pro C# 9 with .NET 5:Foundational Principles and Practices in Programming. 10th ed.Apress.
+Stackoverflow. 2017. Incrementing a numerical value in a dictionary.[online]. Available at:<https://stackoverflow.com/questions/7132738/incrementing-a-numerical-value-in-a-dictionary>.[Accessed 24 May 2025].
+Troelsen, A. and Japikse, P. 2021.Pro C# 9 with .NET 5:Foundational Principles and Practices in Programming. 10th ed.Apress.
 */
