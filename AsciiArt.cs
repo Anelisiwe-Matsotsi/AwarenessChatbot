@@ -13,8 +13,19 @@ namespace CyberAwarenessChatbot_Part1
         public static void Display()
         {
             Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("         _______");
+            Console.WriteLine("       _/       \\_");
+            Console.WriteLine("      / |  O   O | \\");
+            Console.WriteLine("     |  |    ^    | |");
+            Console.WriteLine("     |  |  \\___/  | |");
+            Console.WriteLine("     \\_\\_______/_/");
+            Console.WriteLine("       |       |");
+            Console.WriteLine("      /|       |\\");
+            Console.WriteLine("     /_|_______|_\\");
+            Console.WriteLine("      |   |_|   |");
+            Console.WriteLine("      |___|_|___|");
             Console.WriteLine("╔══════════════════════════════════════════════╗");
-            Console.WriteLine("║    :) CYBERSECURITY AWARENESS BOT :)         ║");
+            Console.WriteLine("║     CYBERSECURITY AWARENESS BOT              ║");
             Console.WriteLine("╚══════════════════════════════════════════════╝");
         }
     }

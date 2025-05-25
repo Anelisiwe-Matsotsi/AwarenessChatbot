@@ -15,7 +15,7 @@ namespace CyberAwarenessChatbot_Part1
         private string lastTopic;
         private string favouriteTopic;
         private bool favouriteTipGiven = false;
-        private Dictionary<string, List<string>> keywordResponses; /*Stackoverflow,*/
+        private Dictionary<string, List<string>> keywordResponses; /*Stackoverflow,2020*/
         private Random random = new Random();
         private Dictionary<string, int> lastResponseIndex = new Dictionary<string, int>();
 
@@ -23,19 +23,20 @@ namespace CyberAwarenessChatbot_Part1
         private delegate void ResponseHandler(string topic);/*Troelsen and Japikse, 2021*/
         public ChatBot()
         {
-            
+            //Cybersecurity tips from CISA (CISA, 2022)
+            //Dictionary from Stackoverflow, 2020
             keywordResponses = new Dictionary<string, List<string>>
             {
                {"password", new List<string>
-                    {
-                        "Use strong, unique passwords for each account.",
-                        "Avoid using the same password on multiple sites.",
-                        "Consider using a password manager to keep track of your passwords."
+                    { /*CISA, 2022*/
+                        "Make each password unique for each account.",
+                        "Don't use names or easy guesses like '123456' or 'pasword123'.",
+                        "Consider getting a password manager to help you generate and store strong passwords securely."
                     }
                },
 
                {"scam", new List<string>
-                    {
+                    { /*CISA, 2022*/
                         "Be cautious of unsolicited emails or messages asking for personal information.",
                         "Always verify the sender's identity  before responding.",
                         "Look out for spelling mistakes and urgent requests in scam messages."
@@ -43,7 +44,7 @@ namespace CyberAwarenessChatbot_Part1
                },
 
                {"privacy", new List<string>
-                    {
+                    { /*CISA, 2022*/
                         "Review your privacy settings regularly on social media.",
                         "Be careful about what personal information you share online.",
                         "Enable two-factor authentication to protect your accounts."
@@ -51,10 +52,10 @@ namespace CyberAwarenessChatbot_Part1
                },
 
                {"phishing", new List<string>
-                    {
-                        "Phishing tricks you into revealing personal information via fake emails or websites.",
+                    { /*CISA, 2022*/
+                        "Phishing tricks you into revealing personal information via fake emails or websites.So if you get a suspicious email or message, don't click it.",
                         "Check email addresses carefully, phishing emails often look similar to legitimate ones.",
-                        "Never click on suspicious links or download unexpected attachments."
+                        "Watch out for signs like bad grammar, odd-looking emails or too good to be true deals."
                     }
                }
 
@@ -112,6 +113,7 @@ namespace CyberAwarenessChatbot_Part1
         }
 
 
+
         private void StartTextChat()
         {
             while (true)
@@ -131,10 +133,15 @@ namespace CyberAwarenessChatbot_Part1
 
             if (input.ToLower() == "exit")
             {
+                    if(!string.IsNullOrEmpty(lastTopic))
+                    {
+                        Console.WriteLine($"Before you go, remember what we discussed about {lastTopic}.");
+                        VoiceAssist.synth.Speak($"Before you go, remember what we discussed about {lastTopic}.");
+                    }
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine($"Goodbye! {userName}! Stay cyber safe and aware!");
                     VoiceAssist.synth.Speak($"Goodbye! {userName}! Stay cyber safe and aware!");
-               break;
+                    break;
             }
 
             RespondToQuestions(input);
@@ -144,6 +151,7 @@ namespace CyberAwarenessChatbot_Part1
         public  void RespondToQuestions(string input)
         {
             string inputLower = input.ToLower();
+
 
             //To check if the bot remembers the user's favourite cybersecurity topic (Memory recall)
             if (inputLower.Contains("what is my favourite cybersecurity topic"))
@@ -176,9 +184,9 @@ namespace CyberAwarenessChatbot_Part1
                 }
                 return;
             }
-
+            /*Troelsen and Japikse, 2021*/
             //Sentiment detection
-            if(inputLower.Contains("worried"))
+            if (inputLower.Contains("worried"))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("It's understandable to feel worried. Let me help you stay safe.");
@@ -210,20 +218,30 @@ namespace CyberAwarenessChatbot_Part1
             //If user asks for more information on the last topic
             if (!string.IsNullOrEmpty(lastTopic) && inputLower.Contains("more"))
             {
+                Console.WriteLine($"Sure, {userName}, here's another fact about {lastTopic}:");
+                VoiceAssist.synth.Speak($"Sure, {userName}, here's another fact about {lastTopic}:");
                 RespondWithTopic(lastTopic);
                 return;
             }
 
+            if (inputLower.Contains("another topic") || inputLower.Contains("different topic") || inputLower.Contains("next topic"))
+            {
+                Console.WriteLine("Here are some topics you can ask about: password, scam, privacy, phishing. Which one interests you?");
+                VoiceAssist.synth.Speak("Here are some topics you can ask about: password, scam, privacy, phishing. Which one interests you?");
+                return;
+            }
 
             //Check for keyword recognition and response using delegate
             bool foundKeyword = false;
-            foreach (var keyword in keywordResponses.Keys)
+            foreach (var keyword in keywordResponses.Keys)/*Troelsen and Japikse, 2021*/
             {
                 if (inputLower.Contains(keyword))
                 {
                     lastTopic = keyword;
                     foundKeyword = true;
 
+                    Console.WriteLine($"You mentioned {keyword}, let's dive into that.");
+                    VoiceAssist.synth.Speak($"You mentioned {keyword}, let's dive into that.");
 
                     //If favourite topic matches, show topic before moving to the main answer
                     if (keyword == favouriteTopic && !favouriteTipGiven)
@@ -232,8 +250,11 @@ namespace CyberAwarenessChatbot_Part1
                         VoiceAssist.synth.Speak($"Since you like {favouriteTopic}, here's a tip: you might want to pay extra attention to this topic.");
                         favouriteTipGiven = true;
                     }
+                    
                     ResponseHandler handler = RespondWithTopic;
                     handler(keyword);
+                    Console.WriteLine("Would you like to hear more about this or ask about another topic?");
+                    VoiceAssist.synth.Speak("Would you like to hear more about this or ask about another topic?");
                     break;
                 }
             }
@@ -248,7 +269,7 @@ namespace CyberAwarenessChatbot_Part1
         private void RespondWithTopic(string topic)
         { 
             var responses = keywordResponses[topic];
-            int index = random.Next(responses.Count);
+            int index = random.Next(responses.Count); /*Microsoft,2025*/
 
             //To prevent repeat for this topic
             if(lastResponseIndex.ContainsKey(topic) && responses.Count > 1) /*Stackoverflow, 2017*/
@@ -272,6 +293,9 @@ namespace CyberAwarenessChatbot_Part1
     }
 }
 /*Reference List:
+CISA (Cybersecurity & Infrastructure Security Acency). 2022.4 Things You Can Do To Keep Yourself Cyber Safe/[online].Available at:<https://www.cisa.gov/news-events/news/4-things-you-can-do-keep-yourself-cyber-safe >.[Accessed 23 May 2025].
+Microsoft.2025.Random.Next Method.[online].Available at:<https://learn.microsoft.com/en-us/dotnet/api/system.random.next?view=net-9.0>.[Accessed 24 May 2025].
+Stackoverlow.2020. Convert a Dictionary<string,List<string>> into a List<string,string>.[online].Available at:<https://stackoverflow.com/questions/62470884/convert-a-dictionarystring-liststring-into-a-liststring-string>.[Accessed 23 May 2025].
 Stackoverflow. 2017. Incrementing a numerical value in a dictionary.[online]. Available at:<https://stackoverflow.com/questions/7132738/incrementing-a-numerical-value-in-a-dictionary>.[Accessed 24 May 2025].
 Troelsen, A. and Japikse, P. 2021.Pro C# 9 with .NET 5:Foundational Principles and Practices in Programming. 10th ed.Apress.
 */
