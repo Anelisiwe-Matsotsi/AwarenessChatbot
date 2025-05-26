@@ -10,11 +10,11 @@ Welcome to the **Cybersecurity awareness chatbot**, a simple C# chatbot designed
 - Select "download zip"
 - Save the file
 
-  ![Bar100rGIF](https://github.com/user-attachments/assets/4c21d016-59ab-4caa-a037-4c45f1de3a03)
+![Image](https://github.com/user-attachments/assets/4dd9703d-edaf-4d75-b628-4368ad4d9138)
 
 
 ## ▶️ How to run the project
-![PrancerciseWalkingGIF (2)](https://github.com/user-attachments/assets/352e9f76-3084-4aab-bac5-cc96ba26be3f)
+![Image](https://github.com/user-attachments/assets/d7c2211e-1d29-4e67-bcab-b7cc20249f90)
 
 - Open the solution in Visual Studio 2022.
 - Ensure your folders/files are all there and located in the correct paths.
@@ -51,3 +51,45 @@ This part plays the WAV file when the chatbot starts and sets up the voice to be
 
 ### AsciiArt.cs
 Just adds a bit of fun to the program. It shows a banner at the beginning to make the startup more visually interesting.
+
+---
+
+# 🗨️ CyberAwarenessChatbot_Part2
+
+Welcome to the **Cybersecurity awareness chatbot**, part 2. This part has added intelligence and emotion-aware conversations. It continues from Part 1 and builds on OOP, sentiment detection, memory recall, keyword recognition and more interactivity.
+
+---
+
+## 📩 Instructions on how to "download" project
+- Go to the GitHub repository.
+- Click on the green "code" button.
+- Select "download zip"
+- Save the file and extract to your devices.
+
+![Image](https://github.com/user-attachments/assets/4dd9703d-edaf-4d75-b628-4368ad4d9138)
+
+
+## ▶️ How to run the project
+![Image](https://github.com/user-attachments/assets/d7c2211e-1d29-4e67-bcab-b7cc20249f90)
+
+- Open the solution in Visual Studio 2022.
+- Ensure your folders/files are all there and located in the correct paths.
+- At the top of the project there is a green ▶️ on the left side of the project name.
+- Press the green start button.
+
+## ✨ New Features in Part 2
+
+- Keyword Recognition
+- Sentiment Detection
+- Random Responses
+- Conversation Flow
+- Memory Recall
+- Error Handling
+  
+## 📹YouTube link
+Click the following link to view the YouTube video:
+
+[https://youtu.be/fIBn5sMsjwA](https://youtu.be/iRTHrQ74Bvc)
+
+---
+![Image](https://github.com/user-attachments/assets/87a5d445-a7c1-4914-accf-81f0e70abd67)
