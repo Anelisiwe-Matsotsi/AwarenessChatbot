@@ -10,19 +10,23 @@ namespace CyberAwarenessChatbot_Part1
 {
     /*Troelsen and Japikse, 2021*/
     public class ChatBot
-    { 
-        private string userName;
-        private string lastTopic;
+    {
+        private readonly VoiceAssist voice;
+        private string userName; 
+        private string lastTopic;//tracks the last discussed topic
         private string favouriteTopic;
-        private bool favouriteTipGiven = false;
+        private bool favouriteTipGiven = false;//ensures the favourite tip is only given once
         private Dictionary<string, List<string>> keywordResponses; /*Stackoverflow,2020*/
         private Random random = new Random();
-        private Dictionary<string, int> lastResponseIndex = new Dictionary<string, int>();
+        private Dictionary<string, int> lastResponseIndex = new Dictionary<string, int>();//tracks last response index for each topic so that repeast are avoided
 
         //Delegate for handling responses
         private delegate void ResponseHandler(string topic);/*Troelsen and Japikse, 2021*/
-        public ChatBot()
+        public ChatBot(VoiceAssist voiceAssist)
         {
+            voice = voiceAssist;
+
+            //Constructor initializes the keywordResponses dictionary with tips
             //Cybersecurity tips from CISA (CISA, 2022)
             //Dictionary from Stackoverflow, 2020
             keywordResponses = new Dictionary<string, List<string>>
@@ -30,7 +34,7 @@ namespace CyberAwarenessChatbot_Part1
                {"password", new List<string>
                     { /*CISA, 2022*/
                         "Make each password unique for each account.",
-                        "Don't use names or easy guesses like '123456' or 'pasword123'.",
+                        "Don't use names or easy guesses like '1 2 3 4 5 6' or 'password1 2 3'.",
                         "Consider getting a password manager to help you generate and store strong passwords securely."
                     }
                },
@@ -60,7 +64,10 @@ namespace CyberAwarenessChatbot_Part1
                }
 
             };
+            this.voice = voice;
         }
+
+        //Starts the chatbot conersation
         public void Start() 
         {
             
@@ -69,78 +76,84 @@ namespace CyberAwarenessChatbot_Part1
             StartTextChat();
         }
 
+        //Prompts the user for their name and greets them
         private void AskForUserName()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("What is your name?");
-            VoiceAssist.synth.Speak("What is your name?");
+            voice.Speak("What is your name?");
             userName = Console.ReadLine();
 
            if (string.IsNullOrEmpty(userName))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Name cannot be empty. Please insert name.\n");
-                VoiceAssist.synth.Speak("Name cannot be empty. Please insert name");
+                voice.Speak("Name cannot be empty. Please insert name");
                 AskForUserName();
                 return;
             }
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"\nWelcome, {userName}! Let's talk cybersecurity.\n");
-            VoiceAssist.synth.Speak($"Welcome, {userName}! Let's talk cybersecurity");
+            voice.Speak($"Welcome, {userName}! Let's talk cybersecurity");
         }
+
+        //Asks the user for their favourite topic
 
         private void AskForFavouriteTopic()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("What is your favourite cybersecurity topic? (e.g., password, scam, privacy, phishing");
-            VoiceAssist.synth.Speak("What is your favourite cybersecurity topic? For example, password, scam, privacy or phishing.");
+            Console.WriteLine("What is your favourite cybersecurity topic? (e.g., password, scam, privacy, phishing)");
+            voice.Speak("What is your favourite cybersecurity topic? For example, password, scam, privacy or phishing.");
             favouriteTopic = Console.ReadLine()?.ToLower();
 
+            //if the topic is recognized, it is acknowledged
             if (!string.IsNullOrEmpty(favouriteTopic) && keywordResponses.ContainsKey(favouriteTopic))/*Stackoverflow, 2017*/
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"Great! I'll remember that you're interested in {favouriteTopic}.");
-                VoiceAssist.synth.Speak($"Great! I'll remember that you're interested in {favouriteTopic}.");
+                voice.Speak($"Great! I'll remember that you're interested in {favouriteTopic}.");
             }
             else
             { 
+                // if not recognized
                 favouriteTopic = null;
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("No problem! You can ask me any cybersecurity topic.");
-                VoiceAssist.synth.Speak("No problem! You can ask me any cybersecurity topic");
+                voice.Speak("No problem! You can ask me any cybersecurity topic");
             }
 
         }
 
 
-
+        //this handles user input as well as conversation flow between user and chatbot
         private void StartTextChat()
         {
             while (true)
           {
              Console.ForegroundColor = ConsoleColor.DarkYellow;
              Console.WriteLine("Ask me something (type 'exit' to quit): ");
-             VoiceAssist.synth.Speak("Ask me something or type 'exit' to quit: ");
+             voice.Speak("Ask me something or type 'exit' to quit: ");
              string input = Console.ReadLine();
 
              if (string.IsNullOrEmpty(input))
              {
                  Console.ForegroundColor = ConsoleColor.Red;
                  Console.WriteLine("Please enter something meaningful.");
-                 VoiceAssist.synth.Speak("Please enter something meaningful.");
+                 voice.Speak("Please enter something meaningful.");
                  continue;
              }
 
             if (input.ToLower() == "exit")
             {
+                    //Remind user of the last topic before exiting the program
                     if(!string.IsNullOrEmpty(lastTopic))
                     {
                         Console.WriteLine($"Before you go, remember what we discussed about {lastTopic}.");
-                        VoiceAssist.synth.Speak($"Before you go, remember what we discussed about {lastTopic}.");
+                        voice.Speak($"Before you go, remember what we discussed about {lastTopic}.");
                     }
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine($"Goodbye! {userName}! Stay cyber safe and aware!");
-                    VoiceAssist.synth.Speak($"Goodbye! {userName}! Stay cyber safe and aware!");
+                    voice.Speak($"Goodbye! {userName}! Stay cyber safe and aware!");
                     break;
             }
 
@@ -148,6 +161,8 @@ namespace CyberAwarenessChatbot_Part1
 
           }
         }
+
+        //Responsible for processing user questions and provide appropriate responses
         public  void RespondToQuestions(string input)
         {
             string inputLower = input.ToLower();
@@ -159,12 +174,12 @@ namespace CyberAwarenessChatbot_Part1
                 if(!string.IsNullOrEmpty(favouriteTopic))
                 {
                     Console.WriteLine($"Your favourite cybersecurity topic is {favouriteTopic}.");
-                    VoiceAssist.synth.Speak($"Your favourite cybersecurity topic is {favouriteTopic}.");
+                    voice.Speak($"Your favourite cybersecurity topic is {favouriteTopic}.");
                 }
                 else
                 {
                     Console.WriteLine("You haven't told me your favourite topic yet.");
-                    VoiceAssist.synth.Speak("You haven't told me your favourite topic yet.");
+                    voice.Speak("You haven't told me your favourite topic yet.");
                 }
                 return;
             }
@@ -175,43 +190,43 @@ namespace CyberAwarenessChatbot_Part1
                 if(!string.IsNullOrEmpty(userName))
                 {
                     Console.WriteLine($"Your name is {userName}.");
-                    VoiceAssist.synth.Speak($"Your name is {userName}.");
+                    voice.Speak($"Your name is {userName}.");
                 }
                 else
                 {
                     Console.WriteLine("You haven't told me your name yet.");
-                    VoiceAssist.synth.Speak("You haven't told me your name yet.");
+                    voice.Speak("You haven't told me your name yet.");
                 }
                 return;
             }
             /*Troelsen and Japikse, 2021*/
-            //Sentiment detection
+            //Sentiment detection, using basic keyword-based mood recognition
             if (inputLower.Contains("worried"))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("It's understandable to feel worried. Let me help you stay safe.");
-                VoiceAssist.synth.Speak("It's understandable to feel worried. Let me help you stay safe.");
+                voice.Speak("It's understandable to feel worried. Let me help you stay safe.");
                 return;
             }
             else if (inputLower.Contains("curious"))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Curiosity is great! Ask me anything about cybersecurity.");
-                VoiceAssist.synth.Speak("Curiosity is great! Ask me anything about cybersecurity.");
+                voice.Speak("Curiosity is great! Ask me anything about cybersecurity.");
                 return;
             }
             else if (inputLower.Contains("frustrated"))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("I understand it can be frustrating. Let me assist you.");
-                VoiceAssist.synth.Speak("I understand it can be frustrating. Let me assist you.");
+                voice.Speak("I understand it can be frustrating. Let me assist you.");
                 return;
             }
             else if (inputLower.Contains("excited"))
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("I'm glad you're excited! Let's learn together.");
-                VoiceAssist.synth.Speak("I'm glad you're excited! Let's learn together.");
+                voice.Speak("I'm glad you're excited! Let's learn together.");
                 return;
             }
 
@@ -219,15 +234,16 @@ namespace CyberAwarenessChatbot_Part1
             if (!string.IsNullOrEmpty(lastTopic) && inputLower.Contains("more"))
             {
                 Console.WriteLine($"Sure, {userName}, here's another fact about {lastTopic}:");
-                VoiceAssist.synth.Speak($"Sure, {userName}, here's another fact about {lastTopic}:");
+                voice.Speak($"Sure, {userName}, here's another fact about {lastTopic}:");
                 RespondWithTopic(lastTopic);
                 return;
             }
 
+            //if user wants to switch to another topic
             if (inputLower.Contains("another topic") || inputLower.Contains("different topic") || inputLower.Contains("next topic"))
             {
                 Console.WriteLine("Here are some topics you can ask about: password, scam, privacy, phishing. Which one interests you?");
-                VoiceAssist.synth.Speak("Here are some topics you can ask about: password, scam, privacy, phishing. Which one interests you?");
+                voice.Speak("Here are some topics you can ask about: password, scam, privacy, phishing. Which one interests you?");
                 return;
             }
 
@@ -241,37 +257,39 @@ namespace CyberAwarenessChatbot_Part1
                     foundKeyword = true;
 
                     Console.WriteLine($"You mentioned {keyword}, let's dive into that.");
-                    VoiceAssist.synth.Speak($"You mentioned {keyword}, let's dive into that.");
+                    voice.Speak($"You mentioned {keyword}, let's dive into that.");
 
                     //If favourite topic matches, show topic before moving to the main answer
                     if (keyword == favouriteTopic && !favouriteTipGiven)
                     {
                         Console.WriteLine($"Since you like {favouriteTopic}, here's a tip: you might want to pay extra attention to this topic.");
-                        VoiceAssist.synth.Speak($"Since you like {favouriteTopic}, here's a tip: you might want to pay extra attention to this topic.");
+                        voice.Speak($"Since you like {favouriteTopic}, here's a tip: you might want to pay extra attention to this topic.");
                         favouriteTipGiven = true;
                     }
                     
+                    //Use delegate to call the topic response method
                     ResponseHandler handler = RespondWithTopic;
                     handler(keyword);
                     Console.WriteLine("Would you like to hear more about this or ask about another topic?");
-                    VoiceAssist.synth.Speak("Would you like to hear more about this or ask about another topic?");
+                    voice.Speak("Would you like to hear more about this or ask about another topic?");
                     break;
                 }
             }
+            //if there is no keyword matched, ask the user to rephrase
                 if (!foundKeyword)
                 {
                     Console.WriteLine("I'm not sure I understand. Can you try rephrasing or ask about another cybersecurity topic?");
-                    VoiceAssist.synth.Speak("I'm not sure I understand. Can you try rephrasing or ask about another cybersecurity topic?");
+                    voice.Speak("I'm not sure I understand. Can you try rephrasing or ask about another cybersecurity topic?");
                 }
             }
         
-        //Delegate target method for responding to a topic
+        //Delegate target method for responding to a topic and avoids immediate repeats
         private void RespondWithTopic(string topic)
         { 
             var responses = keywordResponses[topic];
             int index = random.Next(responses.Count); /*Microsoft,2025*/
 
-            //To prevent repeat for this topic
+            //To prevent repeat of the same tip in a row for a topic
             if(lastResponseIndex.ContainsKey(topic) && responses.Count > 1) /*Stackoverflow, 2017*/
             {
                 int lastIndex = lastResponseIndex[topic];
@@ -288,7 +306,7 @@ namespace CyberAwarenessChatbot_Part1
             lastResponseIndex[topic] = index;
             string response = responses[index];
             Console.WriteLine(response);
-            VoiceAssist.synth.Speak(response);
+            voice.Speak(response);
         }
     }
 }
